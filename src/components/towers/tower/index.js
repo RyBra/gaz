@@ -1,42 +1,42 @@
 import React, { PureComponent as Component } from "react";
-import styled from "styled-components";
-
-let TowerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #fff;
-
-  p {
-    text-align: center;
-  }
-
-  svg {
-    margin-top: -45px;
-    margin-bottom: -60px;
-  }
-`;
+import TowerWrapper from "./styled";
 
 class Tower extends Component {
-  render() {
+  heightСalculation(сurrentPercentage) {
     const emptyLine = 460.5;
     const fullfiledLine = 65;
 
-    let value = this.props.value;
-    let maxValue = this.props.maxValue;
-    let minValue = this.props.minValue;
-
-    let currentProcentValue = (100 / (maxValue - minValue)) * value;
-    //Шаг в 1% от 65 до 460.5
     let step = (emptyLine - fullfiledLine) * 0.01;
-    let paintedLine = fullfiledLine + step * (100 - currentProcentValue); //2% заполнения, а нужно 98%
+    let paintedLine = fullfiledLine + step * (100 - сurrentPercentage);
+
+    if (paintedLine < 65) {
+      paintedLine = 65;
+    } else if (paintedLine > 460.5) {
+      paintedLine = 460.5;
+    }
+
+    return paintedLine;
+  }
+
+  render() {
+    const towerInfo = this.props;
+
+    let value = towerInfo.value;
+    let maxValue = towerInfo.maxValue;
+    let minValue = towerInfo.minValue;
+
+    let сurrentPercentage = (100 / maxValue) * value;
+
+    let paintedLine = this.heightСalculation(сurrentPercentage);
 
     return (
-      <TowerWrapper>
-        <h2>{this.props.title}</h2>
-        <p>
-          Уровень карналита <br /> {~~currentProcentValue}%
-        </p>
+      <TowerWrapper towerInfo={towerInfo}>
+        <div className="underline">
+          <h2>{this.props.title}</h2>
+          <p>
+            Уровень карналита <br /> {~~сurrentPercentage}%
+          </p>
+        </div>
         <svg
           width="155"
           height="618"
@@ -68,9 +68,15 @@ class Tower extends Component {
           />
           <path
             opacity="0.5"
-            d={`M137.4 ${paintedLine}H18V460.5H137.4V255.4Z`}
-            fill="#21B249"
+            d={`M137.4 ${paintedLine}H16.5V460.5H137.4V255.4Z`}
+            fill={
+              towerInfo.value <= towerInfo.maxValue &&
+              towerInfo.value >= towerInfo.minValue
+                ? "#21B249"
+                : "#c43535"
+            }
           />
+          }
           <path d="M154.6 260.8H0V265.1H154.6V260.8Z" fill="#CBCBCB" />
           <path d="M154.6 362.2H0V366.5H154.6V362.2Z" fill="#CBCBCB" />
           <path d="M154.6 159.3H0V163.6H154.6V159.3Z" fill="#CBCBCB" />
@@ -149,8 +155,10 @@ class Tower extends Component {
             </linearGradient>
           </defs>
         </svg>
-        <p>Масса карналита</p>
-        <p>{this.props.value}</p>
+        <div className="footer underline">
+          <p>Масса карналита</p>
+          <p>{this.props.value}</p>
+        </div>
       </TowerWrapper>
     );
   }
