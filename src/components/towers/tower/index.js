@@ -19,20 +19,16 @@ class Tower extends Component {
   }
 
   render() {
-    const towerInfo = this.props;
-
-    let value = towerInfo.value;
-    let maxValue = towerInfo.maxValue;
-    let minValue = towerInfo.minValue;
+    const { title, value, maxValue, minValue } = this.props;
 
     let сurrentPercentage = (100 / maxValue) * value;
 
     let paintedLine = this.heightСalculation(сurrentPercentage);
 
     return (
-      <TowerWrapper towerInfo={towerInfo}>
+      <TowerWrapper towerInfo={this.props}>
         <div className="underline">
-          <h2>{this.props.title}</h2>
+          <h2>{title}</h2>
           <p>
             Уровень карналита <br /> {~~сurrentPercentage}%
           </p>
@@ -70,10 +66,7 @@ class Tower extends Component {
             opacity="0.5"
             d={`M137.4 ${paintedLine}H16.5V460.5H137.4V255.4Z`}
             fill={
-              towerInfo.value <= towerInfo.maxValue &&
-              towerInfo.value >= towerInfo.minValue
-                ? "#21B249"
-                : "#c43535"
+              value <= maxValue && value >= minValue ? "#21B249" : "#c43535"
             }
           />
           }
@@ -157,7 +150,7 @@ class Tower extends Component {
         </svg>
         <div className="footer underline">
           <p>Масса карналита</p>
-          <p>{this.props.value}</p>
+          <p>{value}</p>
         </div>
       </TowerWrapper>
     );
