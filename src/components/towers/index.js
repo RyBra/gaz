@@ -16,7 +16,7 @@ class Towers extends Component {
   };
 
   componentDidMount() {
-    fetch("http://localhost:3000/towers/")
+    fetch(`http://${window.location.host}/towers/`)
       .then(response => response.json())
       .then(towers => this.setState({ towers: towers }));
   }
